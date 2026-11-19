@@ -1,6 +1,7 @@
 #include "Slic3r/Biz/PhysicalPrinter/PhysicalPrinterInteractor.hpp"
 
 #include "Slic3r/Biz/ConnectPrinter/LocalConnect.hpp"
+#include "Slic3r/Biz/ProjectInteractor.hpp"
 #include "Slic3r/Biz/Preset/PresetInteractor.hpp"
 #include "Slic3r/Biz/ProjectScoped.hpp"
 #include "Slic3r/Biz/UserAccount/UserAccountInteractor.hpp"
@@ -65,6 +66,7 @@ PhysicalPrinterInteractor::PhysicalPrinterInteractor(
     UserAccount::UserAccountInteractor& user_account_interactor
 ) :
     m_workbench(workbench),
+    m_project_interactor(project_interactor),
     m_project_contexts(std::make_unique<ProjectContexts>(project_interactor)),
     m_dispatcher(dispatcher),
     m_preset_interactor(preset_interactor),
@@ -250,6 +252,13 @@ bool PhysicalPrinterInteractor::select_uuid(const std::string& uuid)
         return false;
     }
     m_explicit_selection = true;
+    // A local Connect printer picked by hand is the one the next start brings back with its
+    // spools, before anything was sent to it.
+    if (ConnectPrinter::LocalConnectSettings::instance().enabled()
+        && is_connect_printer(m_observable_list.at(index_of(uuid))))
+    {
+        set_last_used(uuid);
+    }
 
     this->invoke_listeners<IPhysicalPrinterChangedListener>(
         [](auto* listener) { listener->on_physical_printer_picked(); }
@@ -555,6 +564,32 @@ PhysicalPrinterInteractor::on_inserted(const ConnectPrinter::ConnectPrinter& pri
         ))
     {
         apply_selection(printer.uuid, false);
+    }
+
+    // With a local Connect the last used printer comes back with its spools once per run, when
+    // the printer list first arrives: picked whole into an empty project, or only its spools read
+    // when it is already selected. The reload button reads them again later.
+    if (!m_connect_materials_synced
+        && printer.uuid == m_last_used_uuid
+        && ConnectPrinter::LocalConnectSettings::instance().enabled())
+    {
+        m_connect_materials_synced = true;
+        if (m_selected_uuid == printer.uuid) {
+            m_dispatcher.dispatch_on_main_thread([this, uuid = printer.uuid]() {
+                if (m_selected_uuid == uuid) {
+                    select_connect_materials(uuid);
+                }
+            });
+        } else if (!m_explicit_selection) {
+            m_dispatcher.dispatch_on_main_thread([this, uuid = printer.uuid]() {
+                if (!m_explicit_selection
+                    && m_project_interactor.selected_project_is_empty()
+                    && find_index(uuid).has_value())
+                {
+                    select_uuid(uuid);
+                }
+            });
+        }
     }
 }
 

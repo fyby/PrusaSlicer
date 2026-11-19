@@ -254,6 +254,8 @@ std::string versioned_datadir_name()
     bool is_beta = semver.prerelease() && std::string{semver.prerelease()}.find("beta") != std::string::npos;
 
     auto datadir_name = std::string(::Slic3r::APP_NAME) + std::to_string(semver.maj());
+    // This fork keeps its profiles apart from an installed PrusaSlicer, so both can run side by side.
+    datadir_name += "-fork";
     if (is_alpha || is_beta) {
         datadir_name += "-dev";
     }

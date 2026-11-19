@@ -212,6 +212,8 @@ private:
     using ProjectContexts = Biz::ProjectScoped<ProjectContext>;
 
     Domain::Workbench& m_workbench;
+    /// Read only to tell a new, empty project from one with content.
+    ProjectInteractor& m_project_interactor;
     std::unique_ptr<ProjectContexts> m_project_contexts;
     Platform::IMainThreadDispatcher& m_dispatcher;
     Preset::PresetInteractor& m_preset_interactor;
@@ -236,6 +238,8 @@ private:
     Domain::SelectionId m_current_container_id{0};
 
     std::string m_selected_uuid;
+    /// Whether the spools of the selected local Connect printer were read in this run.
+    bool m_connect_materials_synced = false;
     bool m_explicit_selection{false};
     std::string m_last_used_uuid;
 
