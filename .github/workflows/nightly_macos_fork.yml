@@ -74,6 +74,8 @@ jobs:
           cp build/src/slic3r-app-launcher/slic3r-app-launcher "$app/Contents/MacOS/PrusaSlicer"
           cp -R resources "$app/Contents/Resources"
           cp build/src/Info.plist "$app/Contents/Info.plist"
+          # Info.plist names the icon at the top of Resources, where the repo does not keep it.
+          cp resources/icons/PrusaSlicer.icns "$app/Contents/Resources/PrusaSlicer.icns"
           # Its own id and name, so it lives next to an installed PrusaSlicer.
           plutil -replace CFBundleIdentifier -string com.prusa3d.slic3r.fork "$app/Contents/Info.plist"
           plutil -replace CFBundleName -string "PrusaSlicer Fork" "$app/Contents/Info.plist"
