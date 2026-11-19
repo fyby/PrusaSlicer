@@ -1,5 +1,6 @@
 #include "Slic3r/Biz/PhysicalPrinter/PhysicalPrinterInteractor.hpp"
 
+#include "Slic3r/Biz/ConnectPrinter/LocalConnect.hpp"
 #include "Slic3r/Biz/Preset/PresetInteractor.hpp"
 #include "Slic3r/Biz/ProjectScoped.hpp"
 #include "Slic3r/Biz/UserAccount/UserAccountInteractor.hpp"
@@ -71,7 +72,7 @@ PhysicalPrinterInteractor::PhysicalPrinterInteractor(
     m_connect_printer_service(dispatcher, user_account_interactor),
     m_listener_scope_preset_interactor(m_preset_interactor, *this),
     m_listener_scope_connect_printer(m_connect_printer_service, *this),
-    m_printer_preset_selector(preset_interactor)
+    m_printer_preset_selector(preset_interactor, project_interactor)
 {
     read_storage();
     restore_last_used_selection();
@@ -138,7 +139,8 @@ bool PhysicalPrinterInteractor::can_be_selected_at(size_t index) const
 {
     const auto& printer = m_observable_list.at(index);
     if (is_connect_printer(printer)) {
-        return m_user_account_interactor.is_logged_in();
+        return ConnectPrinter::LocalConnectSettings::instance().enabled()
+            || m_user_account_interactor.is_logged_in();
     }
     return true;
 }
@@ -199,6 +201,36 @@ void PhysicalPrinterInteractor::select_connect_materials(const std::string& prin
     } catch (const nlohmann::json::exception& e) {
         SPDLOG_ERROR("Failed to parse Connect printer json: {}", e.what());
     }
+}
+
+void PhysicalPrinterInteractor::reload_connect_printer(const std::string& uuid)
+{
+    m_connect_printer_service.fetch_printer_list(
+        [this, uuid](const std::string&)
+        {
+            // Queued after the list is applied, so the selection reads the new materials.
+            m_dispatcher.dispatch_on_main_thread(
+                [this, uuid]()
+                {
+                    if (m_selected_uuid == uuid) {
+                        select_connect_materials(uuid);
+                    } else {
+                        select_uuid(uuid);
+                    }
+                }
+            );
+        },
+        [this](const std::string& error)
+        {
+            m_dispatcher.dispatch_on_main_thread(
+                [this, error]()
+                {
+                    // TRN Warning shown when the printer's materials cannot be read from Connect.
+                    m_printer_preset_selector.warn(_u8L("Cannot read the printer from Connect.") + "\n" + error);
+                }
+            );
+        }
+    );
 }
 
 void PhysicalPrinterInteractor::clear_selection()
@@ -619,6 +651,9 @@ void PhysicalPrinterInteractor::on_selected_config_container_changed(
 void PhysicalPrinterInteractor::on_preset_bundles_initialized()
 {
     migrate_hw_configs();
+    if (ConnectPrinter::LocalConnectSettings::instance().enabled()) {
+        m_connect_printer_service.request_printer_list_refresh();
+    }
 }
 
 void PhysicalPrinterInteractor::on_preset_bundles_reloaded()

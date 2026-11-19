@@ -1,0 +1,91 @@
+# Nightly macOS (Apple silicon) build of this fork. The upstream workflows call
+# Prusa's private reusable workflows, which a fork cannot reach.
+name: Nightly macOS (fork)
+
+on:
+  schedule:
+    - cron: '30 1 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: nightly-macos
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.repository == 'fyby/PrusaSlicer'
+    runs-on: macos-15
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Skip when nothing changed since the last good nightly
+        id: changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          last=$(gh run list -R "$GITHUB_REPOSITORY" -w nightly_macos_fork.yml -s success -L 1 --json headSha -q '.[0].headSha' || true)
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$last" = "$GITHUB_SHA" ]; then
+            echo "build=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install build tools
+        if: steps.changed.outputs.build == 'true'
+        run: |
+          brew install automake gettext libtool texinfo ninja
+          # Boost 1.86 in deps/ does not configure under CMake 4.
+          python3 -m venv "$RUNNER_TEMP/cmake"
+          "$RUNNER_TEMP/cmake/bin/pip" install -q "cmake==3.31.*"
+          echo "$RUNNER_TEMP/cmake/bin" >> "$GITHUB_PATH"
+
+      - name: Restore dependencies
+        if: steps.changed.outputs.build == 'true'
+        id: deps-cache
+        uses: actions/cache@v4
+        with:
+          path: deps/build/destdir
+          key: deps-macos15-arm64-${{ hashFiles('deps/**') }}
+
+      - name: Build dependencies
+        if: steps.changed.outputs.build == 'true' && steps.deps-cache.outputs.cache-hit != 'true'
+        run: |
+          cmake -S deps -B deps/build -G Ninja
+          LC_ALL=C.UTF-8 cmake --build deps/build
+
+      - name: Build PrusaSlicer
+        if: steps.changed.outputs.build == 'true'
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$PWD/deps/build/destdir/usr/local" \
+            -DSLIC3R_RELEASE_DEBUG_SYMBOLS=OFF
+          cmake --build build
+
+      - name: Run the local Connect tests
+        if: steps.changed.outputs.build == 'true'
+        run: build/src/slic3r-shared/slic3r-shared-tests "[LocalConnect]"
+
+      - name: Pack PrusaSlicer Fork.app
+        if: steps.changed.outputs.build == 'true'
+        run: |
+          app="dist/PrusaSlicer Fork.app"
+          mkdir -p "$app/Contents/MacOS"
+          cp build/src/slic3r-app-launcher/slic3r-app-launcher "$app/Contents/MacOS/PrusaSlicer"
+          cp -R resources "$app/Contents/Resources"
+          cp build/src/Info.plist "$app/Contents/Info.plist"
+          # Its own id and name, so it lives next to an installed PrusaSlicer.
+          plutil -replace CFBundleIdentifier -string com.prusa3d.slic3r.fork "$app/Contents/Info.plist"
+          plutil -replace CFBundleName -string "PrusaSlicer Fork" "$app/Contents/Info.plist"
+          codesign --force --deep --sign - "$app"
+          version=$(sed -n 's/.*SLIC3R_VERSION "\(.*\)".*/\1/p' version.inc)
+          name="PrusaSlicer-${version}-fork-$(date -u +%Y%m%d)-${GITHUB_SHA::7}-macos-arm64"
+          (cd dist && ditto -c -k --keepParent "PrusaSlicer Fork.app" "$name.zip")
+          echo "ARTIFACT=$name" >> "$GITHUB_ENV"
+
+      - uses: actions/upload-artifact@v4
+        if: steps.changed.outputs.build == 'true'
+        with:
+          name: ${{ env.ARTIFACT }}
+          path: dist/${{ env.ARTIFACT }}.zip
+          retention-days: 14

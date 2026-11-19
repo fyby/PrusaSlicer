@@ -66,6 +66,9 @@ public:
             [](Network::IHttp::Progress, bool&) {}
     );
 
+    /// Reads the printer list again; a request during one in flight runs once it ends.
+    void request_printer_list_refresh();
+
     void on_user_account_id_success(bool is_refresh, const std::string& username) override;
     void on_user_account_logged_out() override;
 
@@ -75,7 +78,6 @@ private:
     void subscribe(const std::string& uuid);
     void unsubscribe(const std::string& uuid);
     void on_mqtt_message(size_t generation, const std::string& topic, const std::string& payload);
-    void request_printer_list_refresh();
 
     void apply_printer_list(std::vector<ConnectPrinter> new_printers);
     void apply_state(const std::string& uuid, ConnectPrinterState state);

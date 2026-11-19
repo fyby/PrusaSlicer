@@ -78,6 +78,13 @@ public:
 
     std::optional<Domain::MatDb::Material> get_material_by_uuid(const std::string& uuid) const;
 
+    /// Material presets of the slot matching the material, the best ranked first.
+    PresetMatches preset_matches(
+        Domain::SelectionId project_id,
+        size_t material_index,
+        const Domain::MatDb::Material& mat
+    ) const;
+
     void
     run_query_if_active(Domain::SelectionId project_id, Domain::SelectionId config_container_id);
 

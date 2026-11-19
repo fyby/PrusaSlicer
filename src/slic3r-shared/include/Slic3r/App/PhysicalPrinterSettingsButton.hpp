@@ -60,6 +60,7 @@ protected:
 
 private:
     void set_visible_bin(bool is_visible);
+    void set_visible_reload(bool is_visible);
     void set_printer_image();
     void update_tooltip();
     void update_selected();
@@ -77,6 +78,8 @@ private:
     Biz::PhysicalPrinter::PhysicalPrinterInteractor& m_physical_printer_interactor;
 
     Yoga::LayoutButton* m_bin_btn{nullptr};
+    Yoga::LayoutButton* m_reload_btn{nullptr};
+    bool m_is_visible_reload{false};
     Yoga::Icon* m_expand_icon{nullptr};
     bool m_is_visible_bin{false};
     bool m_is_bin_supported{true};

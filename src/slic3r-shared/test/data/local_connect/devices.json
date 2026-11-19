@@ -1,0 +1,467 @@
+{
+ "items": [
+  {
+   "kind": "printer",
+   "id": "0439b159-a9a3-45fa-9371-b90d2f7500b2",
+   "name": "CoreOne_INDX DEMO-01",
+   "vendor": "Prusa",
+   "model": "CoreOne_INDX",
+   "firmware": "6.4.0-0",
+   "serial": "DEMO-01",
+   "driver": "xbuddy",
+   "unit_uid": "AE7CCA7F6E5CF01",
+   "connected": true,
+   "capabilities": [
+    "core.command.beep",
+    "core.command.cancel_object",
+    "core.command.cancel_object#id"
+   ],
+   "capability_epoch": 1,
+   "authorization_epoch": 27,
+   "profile_matched": true,
+   "state": {
+    "/state": "FINISHED",
+    "/tools/0/active": true,
+    "/tools/0/enabled": true,
+    "/tools/0/features/nozzle_diameter": 0.4,
+    "/tools/0/features/nozzle_hardened": false,
+    "/tools/0/features/nozzle_high_flow": false,
+    "/tools/0/feeder/slot_count": 0,
+    "/tools/0/heatbreak_fan_rpm": 8000,
+    "/tools/0/material_package_instance/package/material/abbreviation": "PLA",
+    "/tools/0/nozzle_target_temp": 0,
+    "/tools/0/nozzle_temp": 25,
+    "/tools/0/print_fan_rpm": 0,
+    "/tools/0/type": "FFF_PRINT_HEAD",
+    "/tools/1/active": false,
+    "/tools/1/enabled": true,
+    "/tools/1/features/nozzle_diameter": 0.4,
+    "/tools/1/features/nozzle_hardened": true,
+    "/tools/1/features/nozzle_high_flow": true,
+    "/tools/1/feeder/slot_count": 0,
+    "/tools/1/heatbreak_fan_rpm": 8000,
+    "/tools/1/material_package_instance/package/material/abbreviation": "PETG",
+    "/tools/1/nozzle_temp": 26,
+    "/tools/1/print_fan_rpm": 0,
+    "/tools/1/type": "FFF_PRINT_HEAD",
+    "/tools/2/active": false,
+    "/tools/2/enabled": true,
+    "/tools/2/features/nozzle_diameter": 0.4,
+    "/tools/2/features/nozzle_hardened": false,
+    "/tools/2/features/nozzle_high_flow": false,
+    "/tools/2/feeder/slot_count": 0,
+    "/tools/2/heatbreak_fan_rpm": 8000,
+    "/tools/2/material_package_instance/package/material/abbreviation": "ASA",
+    "/tools/2/nozzle_temp": 27,
+    "/tools/2/print_fan_rpm": 0,
+    "/tools/2/type": "FFF_PRINT_HEAD",
+    "/tools/3/active": false,
+    "/tools/3/enabled": true,
+    "/tools/3/features/nozzle_diameter": 0.4,
+    "/tools/3/features/nozzle_hardened": false,
+    "/tools/3/features/nozzle_high_flow": false,
+    "/tools/3/feeder/slot_count": 0,
+    "/tools/3/heatbreak_fan_rpm": 8000,
+    "/tools/3/material_package_instance/package/material/abbreviation": "PLA",
+    "/tools/3/nozzle_temp": 28,
+    "/tools/3/print_fan_rpm": 0,
+    "/tools/3/type": "FFF_PRINT_HEAD",
+    "/tools/4/active": false,
+    "/tools/4/enabled": true,
+    "/tools/4/features/nozzle_diameter": 0.4,
+    "/tools/4/features/nozzle_hardened": false,
+    "/tools/4/features/nozzle_high_flow": false,
+    "/tools/4/feeder/slot_count": 0,
+    "/tools/4/heatbreak_fan_rpm": 8000,
+    "/tools/4/material_package_instance/package/material/abbreviation": "PVA",
+    "/tools/4/nozzle_temp": 29,
+    "/tools/4/print_fan_rpm": 0,
+    "/tools/4/type": "FFF_PRINT_HEAD",
+    "/tools/5/active": false,
+    "/tools/5/enabled": true,
+    "/tools/5/features/nozzle_diameter": 0.4,
+    "/tools/5/features/nozzle_hardened": false,
+    "/tools/5/features/nozzle_high_flow": false,
+    "/tools/5/feeder/slot_count": 0,
+    "/tools/5/heatbreak_fan_rpm": 8000,
+    "/tools/5/material_package_instance/package/material/abbreviation": "PETG",
+    "/tools/5/nozzle_temp": 30,
+    "/tools/5/print_fan_rpm": 0,
+    "/tools/5/type": "FFF_PRINT_HEAD",
+    "/tools/6/active": false,
+    "/tools/6/enabled": true,
+    "/tools/6/features/nozzle_diameter": 0.4,
+    "/tools/6/features/nozzle_hardened": false,
+    "/tools/6/features/nozzle_high_flow": false,
+    "/tools/6/feeder/slot_count": 0,
+    "/tools/6/heatbreak_fan_rpm": 8000,
+    "/tools/6/material_package_instance/package/material/abbreviation": "PLA",
+    "/tools/6/nozzle_temp": 31,
+    "/tools/6/print_fan_rpm": 0,
+    "/tools/6/type": "FFF_PRINT_HEAD",
+    "/tools/7/active": false,
+    "/tools/7/enabled": true,
+    "/tools/7/features/nozzle_diameter": 0.4,
+    "/tools/7/features/nozzle_hardened": false,
+    "/tools/7/features/nozzle_high_flow": false,
+    "/tools/7/feeder/slot_count": 0,
+    "/tools/7/heatbreak_fan_rpm": 8000,
+    "/tools/7/material_package_instance/package/material/abbreviation": "ASA",
+    "/tools/7/nozzle_temp": 32,
+    "/tools/7/print_fan_rpm": 0,
+    "/tools/7/type": "FFF_PRINT_HEAD"
+   },
+   "job": {
+    "id": "01a1f2f1-2d57-765e-8b95-ccebeab6db2d",
+    "device_job_id": "3",
+    "path": "/usb/tangle.bgcode",
+    "display_name": "tangle.bgcode",
+    "state": "FINISHED",
+    "progress": 100,
+    "time_remaining_ms": 0,
+    "running": false
+   },
+   "tools": {
+    "tool_count": 8,
+    "tools": {
+     "0": {
+      "type": "FFF_PRINT_HEAD",
+      "active": true,
+      "features": {
+       "nozzle_diameter": 0.4,
+       "nozzle_high_flow": false,
+       "nozzle_hardened": false
+      },
+      "feeder": null,
+      "material_package_instance": {
+       "package": {
+        "material": {
+         "abbreviation": "PLA"
+        }
+       }
+      },
+      "nozzle_temp": 25,
+      "nozzle_target_temp": null,
+      "print_fan_rpm": 0,
+      "heatbreak_fan_rpm": 8000
+     },
+     "1": {
+      "type": "FFF_PRINT_HEAD",
+      "active": false,
+      "features": {
+       "nozzle_diameter": 0.4,
+       "nozzle_high_flow": true,
+       "nozzle_hardened": true
+      },
+      "feeder": null,
+      "material_package_instance": {
+       "package": {
+        "material": {
+         "abbreviation": "PETG"
+        }
+       }
+      },
+      "nozzle_temp": 26,
+      "print_fan_rpm": 0,
+      "heatbreak_fan_rpm": 8000
+     },
+     "2": {
+      "type": "FFF_PRINT_HEAD",
+      "active": false,
+      "features": {
+       "nozzle_diameter": 0.4,
+       "nozzle_high_flow": false,
+       "nozzle_hardened": false
+      },
+      "feeder": null,
+      "material_package_instance": {
+       "package": {
+        "material": {
+         "abbreviation": "ASA"
+        }
+       }
+      },
+      "nozzle_temp": 27,
+      "print_fan_rpm": 0,
+      "heatbreak_fan_rpm": 8000
+     },
+     "3": {
+      "type": "FFF_PRINT_HEAD",
+      "active": false,
+      "features": {
+       "nozzle_diameter": 0.4,
+       "nozzle_high_flow": false,
+       "nozzle_hardened": false
+      },
+      "feeder": null,
+      "material_package_instance": {
+       "package": {
+        "material": {
+         "abbreviation": "PLA"
+        }
+       }
+      },
+      "nozzle_temp": 28,
+      "print_fan_rpm": 0,
+      "heatbreak_fan_rpm": 8000
+     },
+     "4": {
+      "type": "FFF_PRINT_HEAD",
+      "active": false,
+      "features": {
+       "nozzle_diameter": 0.4,
+       "nozzle_high_flow": false,
+       "nozzle_hardened": false
+      },
+      "feeder": null,
+      "material_package_instance": {
+       "package": {
+        "material": {
+         "abbreviation": "PVA"
+        }
+       }
+      },
+      "nozzle_temp": 29,
+      "print_fan_rpm": 0,
+      "heatbreak_fan_rpm": 8000
+     },
+     "5": {
+      "type": "FFF_PRINT_HEAD",
+      "active": false,
+      "features": {
+       "nozzle_diameter": 0.4,
+       "nozzle_high_flow": false,
+       "nozzle_hardened": false
+      },
+      "feeder": null,
+      "material_package_instance": {
+       "package": {
+        "material": {
+         "abbreviation": "PETG"
+        }
+       }
+      },
+      "nozzle_temp": 30,
+      "print_fan_rpm": 0,
+      "heatbreak_fan_rpm": 8000
+     },
+     "6": {
+      "type": "FFF_PRINT_HEAD",
+      "active": false,
+      "features": {
+       "nozzle_diameter": 0.4,
+       "nozzle_high_flow": false,
+       "nozzle_hardened": false
+      },
+      "feeder": null,
+      "material_package_instance": {
+       "package": {
+        "material": {
+         "abbreviation": "PLA"
+        }
+       }
+      },
+      "nozzle_temp": 31,
+      "print_fan_rpm": 0,
+      "heatbreak_fan_rpm": 8000
+     },
+     "7": {
+      "type": "FFF_PRINT_HEAD",
+      "active": false,
+      "features": {
+       "nozzle_diameter": 0.4,
+       "nozzle_high_flow": false,
+       "nozzle_hardened": false
+      },
+      "feeder": null,
+      "material_package_instance": {
+       "package": {
+        "material": {
+         "abbreviation": "ASA"
+        }
+       }
+      },
+      "nozzle_temp": 32,
+      "print_fan_rpm": 0,
+      "heatbreak_fan_rpm": 8000
+     }
+    }
+   },
+   "build_volume": {
+    "x_mm": 250,
+    "y_mm": 205.5,
+    "z_mm": 275
+   },
+   "link": {
+    "counted": true,
+    "refused_frames": 0,
+    "refused_frames_per_minute": 0,
+    "dropped_telemetry": 0,
+    "dropped_telemetry_per_minute": 0,
+    "measured_over_seconds": 9.030391211
+   },
+   "tags": [],
+   "labels": {},
+   "issues": []
+  },
+  {
+   "kind": "printer",
+   "id": "aa790aeb-5210-40d8-9ccb-36bcb67a4a21",
+   "name": "Klipper DEMO-06",
+   "vendor": "Klipper",
+   "model": "Klipper",
+   "firmware": "0.12.0",
+   "serial": "DEMO-06",
+   "driver": "demo-echo",
+   "unit_uid": "DEMO-06",
+   "connected": true,
+   "capabilities": [
+    "core.command.get_status",
+    "core.command.set_nozzle_temperature",
+    "core.command.set_nozzle_temperature#celsius"
+   ],
+   "capability_epoch": 1,
+   "authorization_epoch": 27,
+   "profile_matched": false,
+   "state": {
+    "/state": "IDLE",
+    "/tools/0/active": true,
+    "/tools/0/enabled": true,
+    "/tools/0/nozzle_target_temp": 0,
+    "/tools/0/nozzle_temp": 25.7,
+    "/tools/0/type": "FFF_PRINT_HEAD"
+   },
+   "tools": {
+    "tool_count": 1,
+    "tools": {
+     "0": {
+      "type": "FFF_PRINT_HEAD",
+      "active": true,
+      "nozzle_temp": 25.7,
+      "nozzle_target_temp": null
+     }
+    }
+   },
+   "link": {
+    "counted": false,
+    "refused_frames": 0,
+    "refused_frames_per_minute": 0,
+    "dropped_telemetry": 0,
+    "dropped_telemetry_per_minute": 0,
+    "measured_over_seconds": 0
+   },
+   "tags": [],
+   "labels": {},
+   "issues": [
+    {
+     "reason": "no_capability_profile",
+     "severity": "info"
+    }
+   ]
+  }
+ ],
+ "total": 2,
+ "limit": 50,
+ "offset": 0,
+ "issues": {
+  "affected": 1,
+  "counts": {
+   "awaiting_operator": 0,
+   "departed": 0,
+   "disconnected": 0,
+   "frames_refused": 0,
+   "no_capability_profile": 1,
+   "telemetry_dropped": 0
+  },
+  "by_severity": {
+   "error": 0,
+   "info": 1,
+   "warning": 0
+  }
+ },
+ "filters": [
+  {
+   "param": "search",
+   "kind": "text",
+   "max_length": 96
+  },
+  {
+   "param": "state",
+   "kind": "multi",
+   "values": [
+    {
+     "value": "FINISHED",
+     "count": 1
+    },
+    {
+     "value": "IDLE",
+     "count": 1
+    }
+   ]
+  },
+  {
+   "param": "model",
+   "kind": "multi",
+   "values": [
+    {
+     "value": "CoreOne_INDX",
+     "count": 1
+    },
+    {
+     "value": "Klipper",
+     "count": 1
+    }
+   ]
+  },
+  {
+   "param": "severity",
+   "kind": "multi",
+   "values": [
+    {
+     "value": "error",
+     "count": 0
+    },
+    {
+     "value": "warning",
+     "count": 0
+    },
+    {
+     "value": "info",
+     "count": 1
+    }
+   ]
+  },
+  {
+   "param": "tag",
+   "kind": "multi"
+  }
+ ],
+ "sorts": [
+  {
+   "field": "urgency",
+   "default_order": "asc"
+  },
+  {
+   "field": "name",
+   "default_order": "asc"
+  },
+  {
+   "field": "model",
+   "default_order": "asc"
+  },
+  {
+   "field": "state",
+   "default_order": "asc"
+  },
+  {
+   "field": "last_seen",
+   "default_order": "desc"
+  },
+  {
+   "field": "id",
+   "default_order": "asc"
+  }
+ ],
+ "sort": "urgency",
+ "order": "asc"
+}

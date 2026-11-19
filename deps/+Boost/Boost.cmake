@@ -10,6 +10,18 @@ if (APPLE AND CMAKE_OSX_ARCHITECTURES)
     set(_context_arch_line "-DBOOST_CONTEXT_ARCHITECTURE:STRING=${CMAKE_OSX_ARCHITECTURES}")
 endif ()
 
+# Without iconv Boost.Locale cannot convert charsets and the app aborts on start. CMake 3.31
+# does not find the iconv of the macOS SDK on its own, so point it there.
+set(_iconv_lines "")
+if (APPLE)
+    execute_process(COMMAND xcrun --show-sdk-path OUTPUT_VARIABLE _sdk_path OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set(_iconv_lines
+        -DBOOST_LOCALE_ENABLE_ICONV:BOOL=ON
+        -DIconv_INCLUDE_DIR:PATH=${_sdk_path}/usr/include
+        -DIconv_LIBRARY:FILEPATH=${_sdk_path}/usr/lib/libiconv.tbd
+    )
+endif ()
+
 set(_excluded_libs contract|fiber|numpy|stacktrace|wave|test|log)
 if (EMSCRIPTEN)
     set(_excluded_libs ${_excluded_libs}|context|coroutine|asio)
@@ -30,6 +42,7 @@ add_cmake_project(Boost
         "-DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}"
         "${_context_abi_line}"
         "${_context_arch_line}"
+        ${_iconv_lines}
         -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 )
 

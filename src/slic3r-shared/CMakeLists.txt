@@ -1134,6 +1134,8 @@ set(SLIC3R_SHARED_FILES
         src/Slic3r/Biz/ConnectPrinter/ConnectPrinter.cpp
         include/Slic3r/Biz/ConnectPrinter/ConnectPrinterService.hpp
         src/Slic3r/Biz/ConnectPrinter/ConnectPrinterService.cpp
+        include/Slic3r/Biz/ConnectPrinter/LocalConnect.hpp
+        src/Slic3r/Biz/ConnectPrinter/LocalConnect.cpp
         include/Slic3r/Biz/ConnectPrinter/ConnectFavoriteMaterials.hpp
         src/Slic3r/Biz/ConnectPrinter/ConnectFavoriteMaterials.cpp
         include/Slic3r/Biz/ConnectPrinter/ConnectFavoriteMaterialService.hpp
@@ -1736,6 +1738,7 @@ if(SLIC3R_BUILD_TESTS)
             test/Slic3r/Biz/Preset/IO/PresetLoaderTests.cpp
             test/Slic3r/Biz/Preset/IO/PresetMetadataLegacyLoaderTests.cpp
             test/Slic3r/Biz/Preset/IO/HwConfigConnectJsonTests.cpp
+            test/Slic3r/Biz/ConnectPrinter/LocalConnectTests.cpp
             test/Slic3r/Biz/Preset/PresetCollectionEvaluatorTests.cpp
             test/Slic3r/Biz/Preset/PresetEvaluatorTests.cpp
             test/Slic3r/Biz/Preset/HwConfigEvaluatorTests.cpp

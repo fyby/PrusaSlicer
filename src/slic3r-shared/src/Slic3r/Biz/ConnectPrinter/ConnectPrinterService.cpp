@@ -1,5 +1,7 @@
 #include "Slic3r/Biz/ConnectPrinter/ConnectPrinterService.hpp"
 
+#include "Slic3r/Biz/ConnectPrinter/LocalConnect.hpp"
+
 #include "Slic3r/Biz/Network/MqttSubscriber.hpp"
 #include "Slic3r/Biz/Network/ServiceConfig.hpp"
 #include "Slic3r/Biz/UserAccount/UserAccountInteractor.hpp"
@@ -104,6 +106,43 @@ void ConnectPrinterService::fetch_printer_list(
     std::function<void(Network::IHttp::Progress, bool&)> progress_fn
 )
 {
+    if (const LocalConnectSettings& local = LocalConnectSettings::instance(); local.enabled()) {
+        std::thread(
+            [this,
+             generation = m_session_generation,
+             local,
+             success_fn = std::move(success_fn),
+             fail_fn    = std::move(fail_fn)]()
+            {
+                std::string error;
+                std::optional<std::string> body = fetch_local_connect_printer_list(local, error);
+                if (!body.has_value()) {
+                    SPDLOG_ERROR("{}", error);
+                    if (fail_fn) {
+                        fail_fn(error);
+                    }
+                    return;
+                }
+                if (std::optional<std::vector<ConnectPrinter>> printers =
+                        parse_connect_printer_list(*body))
+                {
+                    m_dispatcher.dispatch_on_main_thread(
+                        [this, generation, printers = std::move(*printers)]() mutable
+                        {
+                            if (generation == m_session_generation) {
+                                apply_printer_list(std::move(printers));
+                            }
+                        }
+                    );
+                }
+                if (success_fn) {
+                    success_fn(*body);
+                }
+            }
+        ).detach();
+        return;
+    }
+
     std::thread(
         [this,
          generation   = m_session_generation,
@@ -174,6 +213,10 @@ void ConnectPrinterService::fetch_printer_list(
 
 void ConnectPrinterService::on_user_account_id_success(bool is_refresh, const std::string& username)
 {
+    if (LocalConnectSettings::instance().enabled()) {
+        // The printers come from the local Connect, which needs no Prusa Account.
+        return;
+    }
     if (!m_mqtt_subscriber) {
         start_mqtt();
     } else if (m_user_account_interactor.access_token() != m_mqtt_access_token) {
@@ -188,6 +231,9 @@ void ConnectPrinterService::on_user_account_id_success(bool is_refresh, const st
 
 void ConnectPrinterService::on_user_account_logged_out()
 {
+    if (LocalConnectSettings::instance().enabled()) {
+        return;
+    }
     ++m_session_generation;
     m_refresh_in_flight = false;
     m_refresh_pending   = false;
@@ -344,7 +390,10 @@ void ConnectPrinterService::apply_printer_list(std::vector<ConnectPrinter> new_p
         if (std::optional<size_t> index = find_index(printer.uuid)) {
             ConnectPrinter& current = m_printers.at(*index);
             // Keep the state received over MQTT, the list is only the initial one.
-            printer.state = current.state;
+            // The local Connect has no MQTT here, so its list carries the state.
+            if (!LocalConnectSettings::instance().enabled()) {
+                printer.state = current.state;
+            }
             if (printer != current) {
                 current = std::move(printer);
                 invoke_listeners<IListObserver<ConnectPrinter>>(

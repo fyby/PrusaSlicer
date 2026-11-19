@@ -53,6 +53,10 @@ PhysicalPrinterSettingsButton::PhysicalPrinterSettingsButton(
     m_printer_name->set_flex_shrink(1);
 
     m_bin_btn = add_button(Render::Icon::DeleteBtnIcon, Biz::_u8L("Delete physical printer"));
+    // TRN Tooltip of the button that reads the materials loaded in a Connect printer again.
+    m_reload_btn = add_button(Render::Icon::Reload, Biz::_u8L("Load materials from the printer"));
+    m_reload_btn->callbacks().action = [this]()
+    { m_physical_printer_interactor.reload_connect_printer(m_state->uuid); };
 
     callbacks().action = [this]() { m_on_clicked(m_index); };
 
@@ -82,8 +86,11 @@ void PhysicalPrinterSettingsButton::update_btns_visibility()
 {
     PrinterSettingsButton::update_btns_visibility();
 
-    m_bin_btn->set_visible(m_is_visible_bin && (hovered() || m_bin_btn->hovered() || m_cog_btn->hovered()));
-    m_cog_btn->set_visible(m_is_visible_cog && (hovered() || m_bin_btn->hovered() || m_cog_btn->hovered()));
+    const bool any_hovered =
+        hovered() || m_bin_btn->hovered() || m_cog_btn->hovered() || m_reload_btn->hovered();
+    m_bin_btn->set_visible(m_is_visible_bin && any_hovered);
+    m_cog_btn->set_visible(m_is_visible_cog && any_hovered);
+    m_reload_btn->set_visible(m_is_visible_reload && any_hovered);
 }
 
 void PhysicalPrinterSettingsButton::update()
@@ -102,10 +109,12 @@ void PhysicalPrinterSettingsButton::update()
         set_connect_indicator(upload->state);
         set_visible_cog(false);
         set_visible_bin(false);
+        set_visible_reload(true);
     } else {
         set_connect_indicator(std::nullopt);
         set_visible_cog(!m_state->is_runtime);
         set_visible_bin(m_is_bin_supported && !m_state->is_runtime);
+        set_visible_reload(false);
     }
 
     update_tooltip();
@@ -177,6 +186,14 @@ void PhysicalPrinterSettingsButton::set_visible_bin(bool is_visible)
 {
     if (m_is_visible_bin != is_visible) {
         m_is_visible_bin = is_visible;
+        update_btns_visibility();
+    }
+}
+
+void PhysicalPrinterSettingsButton::set_visible_reload(bool is_visible)
+{
+    if (m_is_visible_reload != is_visible) {
+        m_is_visible_reload = is_visible;
         update_btns_visibility();
     }
 }

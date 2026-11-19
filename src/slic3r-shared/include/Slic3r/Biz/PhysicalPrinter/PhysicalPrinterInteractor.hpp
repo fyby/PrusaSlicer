@@ -90,6 +90,13 @@ public:
      */
     void select_default();
 
+    /**
+     * @brief Reads the Connect printer again and selects the materials loaded in it.
+     *
+     * Selects the printer when it is not selected. The result arrives asynchronously.
+     */
+    void reload_connect_printer(const std::string& uuid);
+
     /// Persists the printer restored on the next start.
     void remember_used_printer(const std::string& uuid);
 
